@@ -19,11 +19,11 @@ use async_std::task;
 fn main() {
     let argparse = CommandParse::parse();
     match &argparse.command {
-        Commands::ThreadedLengthHuman { count } => {
+        Commands::ThreadedHuman { count } => {
             let command = task::block_on(threadedlengthhuman(count)).unwrap();
             println!("The command has finished:{:?}", command);
         }
-        Commands::ThreadedLengthMouse { count } => {
+        Commands::ThreadedMouse { count } => {
             let command = task::block_on(threadedlengthmouse(count)).unwrap();
             println!("The command has finished:{:?}", command);
         }

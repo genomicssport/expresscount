@@ -120,9 +120,42 @@ pub async fn threadedlengthmouse(count: &str) -> Result<String, Box<dyn Error>> 
             }
         }
 
+        let mut totalmap: usize = 0usize;
+        let mut totallength: usize = 0usize;
+
+        for i in expressmatrix.iter() {
+            totalmap += i.2;
+            totallength += i.3;
+        }
+
         let mut filewrite = File::create("express-count.txt").expect("File not present");
         for i in expressmatrix.iter() {
             writeln!(filewrite, "{:?}\t{}\t{}\t{}", i.0, i.1, i.2, i.3).expect("no file present");
+        }
+
+        let mut tpmwrite = File::create("TPM-express-count.txt").expect("File not present");
+        for i in expressmatrix.iter() {
+            writeln!(
+                tpmwrite,
+                "{}\t{}\t{}\t{}",
+                i.0,
+                (i.1 as f64 / (totalmap as f64 / totallength as f64) as f64).to_string(),
+                i.2,
+                i.3
+            )
+            .expect("file not present");
+        }
+
+        let mut rpkmwrite = File::create("rpkm-express-count.txt").expect("file not present");
+        for i in expressmatrix.iter() {
+            writeln!(
+                rpkmwrite,
+                "{}\t{}\t{}",
+                i.0,
+                i.2 as usize * 1000000000usize / (allmapped * i.3),
+                i.3
+            )
+            .expect("file not present");
         }
 
         let _ = Command::new("rm")

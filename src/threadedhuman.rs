@@ -106,23 +106,56 @@ pub async fn threadedlengthhuman(count: &str) -> Result<String, Box<dyn Error>> 
             allmapped += i.1;
         }
 
-        let mut expressmatrix: Vec<(String, usize, usize, usize)> = Vec::new();
+        let mut expressmatrix: Vec<(String, f64, usize, usize)> = Vec::new();
         for (i, value) in averagecount.iter() {
             for (j, val) in genevecrwrite.iter() {
                 if i == j {
                     let divide: usize = 1000000000usize * value;
-                    let mapdivide = divide / allmapped;
-                    let finalmap = mapdivide / val.length;
-                    let matrixinsert: (String, usize, usize, usize) =
+                    let mapdivide = divide as f64 / allmapped as f64;
+                    let finalmap = mapdivide as f64 / val.length as f64;
+                    let matrixinsert: (String, f64, usize, usize) =
                         (i.clone(), finalmap, *value, val.length);
                     expressmatrix.push(matrixinsert);
                 }
             }
         }
 
-        let mut filewrite = File::create("express-count.txt").expect("File not present");
+        let mut totalmap: usize = 0usize;
+        let mut totallength: usize = 0usize;
+
         for i in expressmatrix.iter() {
-            writeln!(filewrite, "{:?}\t{}\t{}\t{}", i.0, i.1, i.2, i.3).expect("no file present");
+            totalmap += i.2;
+            totallength += i.3;
+        }
+
+        let mut fpkmwrite = File::create("fpkm-express-count.txt").expect("File not present");
+        for i in expressmatrix.iter() {
+            writeln!(fpkmwrite, "{:?}\t{}\t{}\t{}", i.0, i.1, i.2, i.3).expect("no file present");
+        }
+
+        let mut tpmwrite = File::create("TPM-express-count.txt").expect("File not present");
+        for i in expressmatrix.iter() {
+            writeln!(
+                tpmwrite,
+                "{}\t{}\t{}\t{}",
+                i.0,
+                (i.1 as f64 / (totalmap as f64 / totallength as f64) as f64).to_string(),
+                i.2,
+                i.3
+            )
+            .expect("file not present");
+        }
+
+        let mut rpkmwrite = File::create("rpkm-express-count.txt").expect("file not present");
+        for i in expressmatrix.iter() {
+            writeln!(
+                rpkmwrite,
+                "{}\t{}\t{}",
+                i.0,
+                i.2 as usize * 1000000000usize / (allmapped * i.3),
+                i.3
+            )
+            .expect("file not present");
         }
 
         let _ = Command::new("rm")

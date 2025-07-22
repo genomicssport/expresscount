@@ -21,12 +21,12 @@ pub struct CommandParse {
 #[derive(Subcommand, Debug)]
 pub enum Commands {
     /// threaded version of genelength for human
-    ThreadedLengthHuman {
+    ThreadedHuman {
         /// provide yes as argument
         count: String,
     },
     /// trhreaded version of genelength for mouse
-    ThreadedLengthMouse {
+    ThreadedMouse {
         /// provide yes as argument
         count: String,
     },
