@@ -25,8 +25,18 @@ pub enum Commands {
         /// provide yes as argument
         count: String,
     },
-    /// trhreaded version of genelength for mouse
+    /// threaded version of genelength for mouse
     ThreadedMouse {
+        /// provide yes as argument
+        count: String,
+    },
+    /// only exon coverage
+    ExonThreadedHuman {
+        /// provide yes as argument
+        count: String,
+    },
+    /// only exon coverage
+    ExonThreadedMouse {
         /// provide yes as argument
         count: String,
     },

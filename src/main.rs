@@ -1,11 +1,16 @@
 mod args;
+mod exon;
+mod threadedhumanexon;
+mod threadedmouseexon;
 use crate::args::CommandParse;
 use crate::args::Commands;
 use clap::Parser;
 mod threadedhuman;
 mod threadedmouse;
 use crate::threadedhuman::threadedlengthhuman;
+use crate::threadedhumanexon::threadedlengthhumanexon;
 use crate::threadedmouse::threadedlengthmouse;
+use crate::threadedmouseexon::threadedlengthmouseexon;
 use async_std::task;
 
 /*
@@ -26,6 +31,14 @@ fn main() {
         Commands::ThreadedMouse { count } => {
             let command = task::block_on(threadedlengthmouse(count)).unwrap();
             println!("The command has finished:{:?}", command);
+        }
+        Commands::ExonThreadedHuman { count } => {
+            let command = task::block_on(threadedlengthhumanexon(count)).unwrap();
+            println!("The file has been written:{}", command);
+        }
+        Commands::ExonThreadedMouse { count } => {
+            let command = task::block_on(threadedlengthmouseexon(count)).unwrap();
+            println!("The file has been written:{}", command);
         }
     }
 }
